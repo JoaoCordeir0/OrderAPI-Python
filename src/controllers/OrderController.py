@@ -1,6 +1,7 @@
 from src.database.Engine import Engine
 from src.database.Bases import Order, ItemOrder, Product
 from src.controllers.ProductController import ProductController
+from datetime import datetime
 
 class OrderController:
 
@@ -11,16 +12,9 @@ class OrderController:
     def __init__(self) -> None:
         self.session = Engine().get_session()
 
-    def list(self):
-        data = []
-        orders = self.session.query(ItemOrder, Product, Order).join(Product, ItemOrder.ProductId == Product.Id).join(Order, ItemOrder.OrderId == Order.Id).all()
-        for item, product, order in orders:
-            data.append({
-                'item': item,
-                'product': product,
-                'order': order
-            })
-        return data
+    def list(self):        
+        orders = self.session.query(Order).all()        
+        return orders
     
     def get(self, id):
         data = []
@@ -39,21 +33,21 @@ class OrderController:
         for item in items:
             product = self.session.query(Product).filter(Product.Id == item.ProductId).first()
             products.append({
-                'id': item.Id,
-                'productId': product.Id,
-                'productName': product.ProductName,
-                'unitValue': product.Value,
-                'amount': item.Amount,
+                'Id': item.Id,
+                'ProductId': product.Id,
+                'ProductName': product.ProductName,
+                'UnitValue': product.Value,
+                'Amount': item.Amount,
             })
             totalValue += product.Value * item.Amount
 
         data.append({
-            'id': order.Id,
-            'clientName': order.ClientName,
-            'clientEmail': order.ClientEmail,
-            'paid': order.Paid,
-            'totalValue': totalValue,
-            'itemsOrder': products
+            'Id': order.Id,
+            'ClientName': order.ClientName,
+            'ClientEmail': order.ClientEmail,
+            'Paid': order.Paid,
+            'TotalValue': totalValue,
+            'ItemsOrder': products
         })
         return data
 
@@ -74,11 +68,11 @@ class OrderController:
                 }            
 
             # Caso o id do pedido não for passado, cria o pedido com as info do usuário
-            if data.OrderId == None:                    
+            if data.OrderId == None or data.OrderId == 0:                    
                 order = Order(
                     ClientName=data.ClientName,
                     ClientEmail=data.ClientEmail,
-                    CreationDate=data.CreationDate,
+                    CreationDate=datetime.now(),
                     Paid=data.Paid
                 )
                 self.session.add(order)
