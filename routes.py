@@ -27,6 +27,14 @@ async def product_get(id: int):
 async def product_add(request: ProductRequest):        
     return ProductController().add(request)
 
+@router.put('/api/product/edit')
+async def product_edit(request: ProductRequest):        
+    return ProductController().edit(request)
+
+@router.delete('/api/product/{id}')
+async def product_delete(id):        
+    return ProductController().delete(id)
+
 @router.get('/api/order/list')
 async def order_list():        
     return OrderController().list()

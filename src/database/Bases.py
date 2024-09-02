@@ -5,22 +5,22 @@ Base = declarative_base()
 
 class Order(Base):    
     __tablename__ = 'order'
-    Id = Column(Integer, primary_key=True, autoincrement=True)
-    ClientName = Column(String)
-    ClientEmail = Column(Integer)
-    CreationDate = Column(DateTime)
-    Paid = Column(Boolean)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    clientName = Column(String)
+    clientEmail = Column(Integer)
+    creationDate = Column(DateTime)
+    paid = Column(Boolean)
 
 class Product(Base):    
     __tablename__ = 'product'
-    Id = Column(Integer, primary_key=True, autoincrement=True)
-    ProductName = Column(String)
-    Value = Column(DECIMAL)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    productName = Column(String)
+    value = Column(DECIMAL)
 
 class ItemOrder(Base):    
     __tablename__ = 'item_order'
-    Id = Column(Integer, primary_key=True, autoincrement=True)
-    OrderId = Column(Integer, ForeignKey('order.Id'))
-    ProductId = Column(Integer, ForeignKey('product.Id'))
-    Amount = Column(Integer)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    orderId = Column(Integer, ForeignKey('order.Id'))
+    productId = Column(Integer, ForeignKey('product.Id'))
+    amount = Column(Integer)
 

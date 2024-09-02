@@ -18,82 +18,77 @@ class OrderController:
     
     def get(self, id):
         data = []
-        order = self.session.query(Order).filter(Order.Id == id).first()
+        order = self.session.query(Order).filter(Order.id == id).first()
 
         if order == None:                
-            return {
-                'status': 'warning',
+            return {                
                 'message': 'Order not found!'
             }     
         
-        items = self.session.query(ItemOrder).filter(ItemOrder.OrderId == id).all()
+        items = self.session.query(ItemOrder).filter(ItemOrder.orderId == id).all()
         
         totalValue = 0
         products = []
         for item in items:
-            product = self.session.query(Product).filter(Product.Id == item.ProductId).first()
+            product = self.session.query(Product).filter(Product.id == item.productId).first()
             products.append({
-                'Id': item.Id,
-                'ProductId': product.Id,
-                'ProductName': product.ProductName,
-                'UnitValue': product.Value,
-                'Amount': item.Amount,
+                'id': item.id,
+                'productId': product.id,
+                'productName': product.productName,
+                'unitValue': product.value,
+                'amount': item.amount,
             })
-            totalValue += product.Value * item.Amount
+            totalValue += product.value * item.amount
 
         data.append({
-            'Id': order.Id,
-            'ClientName': order.ClientName,
-            'ClientEmail': order.ClientEmail,
-            'Paid': order.Paid,
-            'TotalValue': totalValue,
-            'ItemsOrder': products
+            'id': order.id,
+            'clientName': order.clientName,
+            'clientEmail': order.clientEmail,
+            'paid': order.paid,
+            'totalValue': totalValue,
+            'items': products
         })
-        return data
+        return data[0]
 
     def add(self, data):
         try:
-            if data.Amount < 1:
-                return {
-                    'status': 'warning',
+            if data.amount < 1:
+                return {                    
                     'message': 'The quantity must be equal to or greater than 1!'
                 }
             
-            product = ProductController().get(data.ProductId)
+            product = ProductController().get(data.productId)
 
             if product == None:                
-                return {
-                    'status': 'warning',
+                return {                    
                     'message': 'Product not found!'
                 }            
 
             # Caso o id do pedido não for passado, cria o pedido com as info do usuário
-            if data.OrderId == None or data.OrderId == 0:                    
+            if data.orderId == None or data.orderId == 0:                    
                 order = Order(
-                    ClientName=data.ClientName,
-                    ClientEmail=data.ClientEmail,
-                    CreationDate=datetime.now(),
-                    Paid=data.Paid
+                    clientName=data.clientName,
+                    clientEmail=data.clientEmail,
+                    creationDate=datetime.now(),
+                    paid=data.paid
                 )
                 self.session.add(order)
                 self.session.commit()
-                data.OrderId = order.Id
+                data.orderId = order.id
 
             item = ItemOrder(
-                OrderId=data.OrderId,
-                ProductId=data.ProductId,
-                Amount=data.Amount
+                orderId=data.orderId,
+                productId=data.productId,
+                amount=data.amount
             )
             self.session.add(item)
             self.session.commit()
 
-            return {
-                'status': 'success',
+            return {                
                 'message': 'Order insert success!'
             }
         except Exception:
-            return {
-                'status': 'error',
+            return {                
                 'message': 'Order error!'                                
             }
 
