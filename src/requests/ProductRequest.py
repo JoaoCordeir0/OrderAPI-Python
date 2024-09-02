@@ -6,5 +6,5 @@ class ProductRequest(BaseModel):
     """NOTE: Classe modelo do produto"""
 
     id: Optional[int] = None
-    ProductName: str
-    Value: float
+    productName: str
+    value: float

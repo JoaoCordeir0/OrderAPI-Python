@@ -92,4 +92,44 @@ class OrderController:
                 'message': 'Order error!'                                
             }
 
+    def edit(self, data):
+        order = self.session.query(Order).filter(Order.id == data.id).first()
+            
+        if order:            
+            if data.clientName:
+                order.clientName = data.clientName
+            if data.clientEmail:
+                order.clientEmail = data.clientEmail    
+            if data.creationDate:
+                order.creationDate = datetime.now()    
+            if data.paid:
+                order.paid = 1 if data.paid else 0
+
+            self.session.commit()
+            
+            return {                
+                'message': 'Order edited success!'
+            }
+        return {                
+            'message': 'Order not found!'
+        }    
+
+    def delete(self, id):
+        order = self.session.query(Order).filter(Order.id == id).first()
+
+        if order:            
+            items = self.session.query(ItemOrder).filter(ItemOrder.orderId == id).first()
+
+            self.session.delete(items)            
+            self.session.commit()
+
+            self.session.delete(order)            
+            self.session.commit()
+
+            return {                
+                'message': 'Order delete success!'
+            }
+        return {                
+            'message': 'Order not found!'
+        }    
     

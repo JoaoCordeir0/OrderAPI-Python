@@ -3,6 +3,7 @@ from src.controllers.ProductController import ProductController
 from src.controllers.OrderController import OrderController
 from src.requests.ProductRequest import ProductRequest
 from src.requests.OrderRequest import OrderRequest
+from src.requests.OrderEditRequest import OrderEditRequest
 
 router = APIRouter()
 
@@ -46,3 +47,12 @@ async def order_get(id: int):
 @router.post('/api/order/add')
 async def order_add(request: OrderRequest):        
     return OrderController().add(request)
+
+@router.put('/api/order/edit')
+async def order_edit(request: OrderEditRequest):        
+    return OrderController().edit(request)
+
+@router.delete('/api/order/{id}')
+async def order_delete(id):        
+    return OrderController().delete(id)
+

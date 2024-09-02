@@ -2,15 +2,13 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 
-class OrderRequest(BaseModel):
+class OrderEditRequest(BaseModel):
     
     """NOTE: Classe modelo do pedido"""
 
-    orderId: Optional[int] = None
+    id: int = None
     clientName: Optional[str] = None
     clientEmail: Optional[str] = None
     creationDate: Optional[datetime] = None
-    paid: Optional[bool] = None
-    productId: int    
-    amount: int
+    paid: Optional[bool] = None    
     

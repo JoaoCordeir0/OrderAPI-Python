@@ -20,7 +20,7 @@ class Product(Base):
 class ItemOrder(Base):    
     __tablename__ = 'item_order'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    orderId = Column(Integer, ForeignKey('order.Id'))
-    productId = Column(Integer, ForeignKey('product.Id'))
+    orderId = Column(Integer, ForeignKey('order.id'))
+    productId = Column(Integer, ForeignKey('product.id'))
     amount = Column(Integer)
 
